@@ -1,23 +1,15 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+import GameArea from './components/GameArea.vue'
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+<div id="gamearea">
+<GameArea />
+</div>
 
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
 </template>
 
 <style scoped>
@@ -55,6 +47,13 @@ nav a {
 nav a:first-of-type {
   border: 0;
 }
+
+#app {
+    padding: 10px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #353535, #252525);
+}
+
 
 @media (min-width: 1024px) {
   header {
