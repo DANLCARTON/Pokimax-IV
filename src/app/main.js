@@ -19,5 +19,5 @@ hotkeys('ctrl+a,ctrl+b,r,f', function (event, handler){
   */
 
 window.addEventListener("load", () => {
-    intro();
+    const id = intro();
 })
