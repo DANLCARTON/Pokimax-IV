@@ -1,6 +1,7 @@
+import { createPinia } from "pinia";
 import { updateText, lireLigne, wait, clear } from "./text.js";
 
-function getName(question) {
+function getParam(question) {
     return new Promise(resolve => {
         const answer = window.prompt(question);
         resolve(answer);
@@ -69,7 +70,7 @@ async function intro() {
     clear();
     await updateText(["Comment t'appelles-tu ?"], 40);
     await wait(920+speed);
-    const playerName = await getName("Votre nom ?");
+    const playerName = await getParam("Votre nom ?");
     await wait(0+speed);
     clear();
     await updateText(["Alors tu t'appelles "+playerName+" ?", "Très bien !"], 40);
@@ -89,7 +90,8 @@ async function intro() {
     clear();
     await updateText(["Allez ! Plonge dans le monde des Pokémon !!"], 20);
     await wait(860+speed);
+    console.log("okokdoqksd");
     return getID(playerName);
 }
 
-export {intro};
+export {intro, getParam};
