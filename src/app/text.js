@@ -23,4 +23,22 @@ async function updateText(text, delay) {
     lireLigne(text, 0, delay);
 }
 
-export {formatText, updateText, lireLigne, wait, clear};
+async function updateTextInstant(text) {
+    document.getElementById("game").textContent = formatText(text);
+}
+
+function convertMapToStringArray(map) {
+    let stringMap = [];
+
+    for (let i = 0; i < map.length; i++) {
+        let row = "";
+        for (let j = 0; j < map[i].length; j++) {
+        row += map[i][j].content;
+        }
+        stringMap.push(row);
+    }
+
+    return stringMap;
+}
+
+export {formatText, updateText, lireLigne, wait, clear, convertMapToStringArray, updateTextInstant};
