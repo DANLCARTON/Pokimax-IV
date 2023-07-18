@@ -68,4 +68,4 @@ function bernoulli(p) {
     return val < p ? true : false;
 }
 
-export {uniforme, getPFromId, poisson, hypergeometrique, densite};
+export {uniforme, getPFromId, poisson, hypergeometrique, densite, bernoulli};

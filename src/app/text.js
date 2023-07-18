@@ -24,7 +24,7 @@ async function updateText(text, delay) {
 }
 
 async function updateTextInstant(text) {
-    document.getElementById("game").textContent = formatText(text);
+    document.getElementById("game").textContent += formatText(text);
 }
 
 function convertMapToStringArray(map) {

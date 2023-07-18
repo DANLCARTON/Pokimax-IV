@@ -1,6 +1,5 @@
 import { createPinia } from "pinia";
 import { updateText, lireLigne, wait, clear } from "./text.js";
-import hotkeys from "hotkeys-js"
 
 function getParam(question) {
     return new Promise(resolve => {
@@ -18,7 +17,7 @@ function getID(name) {
 }
 
 async function intro() {
-    const speed = 0;
+    const speed = -2000;
     await wait(0+speed);
     clear();
     await updateText(["...", "..."], 80);
