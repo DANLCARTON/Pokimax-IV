@@ -1,5 +1,6 @@
 import { createPinia } from "pinia";
 import { updateText, lireLigne, wait, clear } from "./text.js";
+import hotkeys from "hotkeys-js"
 
 function getParam(question) {
     return new Promise(resolve => {
@@ -17,7 +18,7 @@ function getID(name) {
 }
 
 async function intro() {
-    const speed = 2000;
+    const speed = 0;
     await wait(0+speed);
     clear();
     await updateText(["...", "..."], 80);
@@ -90,7 +91,6 @@ async function intro() {
     clear();
     await updateText(["Allez ! Plonge dans le monde des Pokémon !!"], 20);
     await wait(860+speed);
-    console.log("okokdoqksd");
     return getID(playerName);
 }
 

@@ -52,6 +52,7 @@ nav a:first-of-type {
     padding: 10px;
     border-radius: 10px;
     background: linear-gradient(135deg, #353535, #252525);
+    line-height: 18px;
 }
 
 

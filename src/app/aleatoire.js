@@ -63,4 +63,9 @@ function densite(id, courbe) {
     return val;
 }
 
+function bernoulli(p) {
+    let val = uniforme();
+    return val < p ? true : false;
+}
+
 export {uniforme, getPFromId, poisson, hypergeometrique, densite};

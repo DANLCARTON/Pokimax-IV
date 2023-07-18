@@ -2,6 +2,10 @@ import { Pokemon } from "./pokemon.js";
 import { getPFromId, uniforme, poisson, hypergeometrique, densite } from "./aleatoire.js";
 import { clear, convertMapToStringArray, updateText, wait, updateTextInstant } from './text.js';
 import { getParam } from "./intro.js";
+import hotkeys from "hotkeys-js"
+
+var player = "P";
+var pokemon = "░";
 
 class Point {
     constructor(x, y, pokemon) {
@@ -45,100 +49,39 @@ class Case {
     }
 }
 
-/*function apparenceMap(larg, haut) {;
-    let map = [""];
-
-    map[0] += "╔";
-    for (let i = 0; i <= larg-2; ++i) {
-        map[0] += "═";
-    }
-    map[0] += "╗";
-
-    for (let i = 1; i <= haut-2; ++i) {
-        map.push("");
-        map[i] += "║";
-        for (let j = 0; j <= larg-2; ++j) {
-            map[i] += " ";
-        }
-        map[i] += "║";
-    }
-
-    map.push("");
-    map[haut-1] += "╚";
-    for (let i = 0; i <= larg-2; ++i) {
-        map[haut-1] += "═";
-    }
-    map[haut-1] += "╝";
-
-    return map;
-}*/
-
-/*function apparenceMap(larg, haut) {
+function apparenceMap(larg, haut) {
     let map = [];
-  
-    // Première ligne
-    let firstRow = ["╔"];
-    for (let i = 0; i < larg - 2; ++i) {
-      firstRow.push("═");
-    }
-    firstRow.push("╗");
-    map.push(firstRow);
-  
-    // Lignes intermédiaires
-    for (let i = 0; i < haut - 2; ++i) {
-      let row = ["║"];
-      for (let j = 0; j < larg - 2; ++j) {
-        row.push(" ");
-      }
-      row.push("║");
-      map.push(row);
-    }
-  
-    // Dernière ligne
-    let lastRow = ["╚"];
-    for (let i = 0; i < larg - 2; ++i) {
-      lastRow.push("═");
-    }
-    lastRow.push("╝");
-    map.push(lastRow);
-  
-    return map;
-  }*/
 
-  function apparenceMap(larg, haut) {
-    let map = [];
-  
     map[0] = [];
     map[0].push(new Case("╔"));
     for (let i = 0; i <= larg - 2; ++i) {
-      map[0].push(new Case("═"));
+        map[0].push(new Case("═"));
     }
     map[0].push(new Case("╗"));
-  
+
     for (let i = 1; i <= haut - 2; ++i) {
-      map[i] = [];
-      map[i].push(new Case("║"));
-      for (let j = 0; j <= larg - 2; ++j) {
+        map[i] = [];
+        map[i].push(new Case("║"));
+        for (let j = 0; j <= larg - 2; ++j) {
         map[i].push(new Case(" "));
-      }
-      map[i].push(new Case("║"));
+        }
+        map[i].push(new Case("║"));
     }
-  
+
     map[haut - 1] = [];
     map[haut - 1].push(new Case("╚"));
     for (let i = 0; i <= larg - 2; ++i) {
-      map[haut - 1].push(new Case("═"));
+        map[haut - 1].push(new Case("═"));
     }
     map[haut - 1].push(new Case("╝"));
-  
+
     return map;
-  }
+}
 
 async function genererPoints(map, larg, haut, shape, id, pokemonArray) {
     let points = [];
     let lambda = getPFromId(id)*(haut/3)*(larg/3);
     let nbPoke = poisson(lambda);
-    console.log('nbpoke', nbPoke)
     let shapeText = "";
     switch (shape) {
         case ("0"):
@@ -162,10 +105,8 @@ async function genererPoints(map, larg, haut, shape, id, pokemonArray) {
     for (let i = 0; i <= nbPoke-1; ++i) {
         let coordY = Math.floor(densite(0, shape)*(haut-2))+1
         let coordX = Math.floor(densite(0, shape)*(larg-2))+1
-        console.log("cx", coordX);
-        console.log("cy", coordY);
         points.push(new Point(coordX, coordY, randomPokemon(pokemonArray)));
-        map[coordY][coordX].content = "░"
+        map[coordY][coordX].content = pokemon;
     }
 }
 
@@ -287,9 +228,22 @@ async function mapStart(id) {
     let coordX = 1;
     let coordY = 1;
 
-    map[coordY][coordX].content = "☻";
+    map[coordY][coordX].content = player;
 
     await displayMap(convertMapToStringArray(map));
+
+    console.log("le while juste après")
+
+    hotkeys("z", (event, handler) => {
+        if (coordY > 1) {
+            map[coordY][coordX].content = " ";
+            coordY--;
+            if (map[coordY][coordX].content == pokemon) {
+                let wildPokemon = getPokemon(coordX, coordY, points);
+                battleStart(playerTeam, wildPokemon, id);
+            }
+        }
+    })
 }   
 
 export {mapStart}
