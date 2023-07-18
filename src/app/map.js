@@ -246,8 +246,7 @@ async function mapStart(id) {
             coordY--;
             if (map[coordY][coordX].content == pokemon) {
                 let wildPokemon = getPokemon(coordX, coordY, points);
-                console.log(wildPokemon);
-                battleStart(playerTeam, wildPokemon, id);
+                await battleStart(playerTeam, wildPokemon, id); 
             }
             map[coordY][coordX].content = player;
             await displayMap(map)
@@ -261,7 +260,7 @@ async function mapStart(id) {
             coordY++;
             if (map[coordY][coordX].content == pokemon) {
                 let wildPokemon = getPokemon(coordX, coordY, points);
-                battleStart(playerTeam, wildPokemon, id);
+                await battleStart(playerTeam, wildPokemon, id); 
             }
             map[coordY][coordX].content = player;
             await displayMap(map)
@@ -275,7 +274,7 @@ async function mapStart(id) {
             coordX--;
             if (map[coordY][coordX].content == pokemon) {
                 let wildPokemon = getPokemon(coordX, coordY, points);
-                battleStart(playerTeam, wildPokemon, id);
+                await battleStart(playerTeam, wildPokemon, id); 
             }
             map[coordY][coordX].content = player;
             await displayMap(map)
@@ -289,7 +288,7 @@ async function mapStart(id) {
             coordX++;
             if (map[coordY][coordX].content == pokemon) {
                 let wildPokemon = getPokemon(coordX, coordY, points);
-                battleStart(playerTeam, wildPokemon, id);
+                await battleStart(playerTeam, wildPokemon, id); 
             }
             map[coordY][coordX].content = player;
             await displayMap(map)
