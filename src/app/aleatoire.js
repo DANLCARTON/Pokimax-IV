@@ -81,4 +81,14 @@ function binomiale(id, k, n) {
     return Pk;
 }
 
-export {uniforme, getPFromId, poisson, hypergeometrique, densite, bernoulli, binomiale};
+function essaisGeometrique(p) {
+    let k = 1;
+    let Px = Math.pow(1-p, k-1)*p;
+    while(Px < 0.95) {
+        ++k;
+        Px += Math.pow(1-p, k-1)*p
+    } 
+    return k;
+}
+
+export {uniforme, getPFromId, poisson, hypergeometrique, densite, bernoulli, binomiale, essaisGeometrique};

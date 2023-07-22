@@ -1,5 +1,5 @@
 import { updateTextInstant, clear, updateText, wait } from "./text.js";
-import {bernoulli, binomiale, uniforme} from "./aleatoire.js";
+import {bernoulli, binomiale, essaisGeometrique, uniforme} from "./aleatoire.js";
 import hotkeys from "hotkeys-js";
 import { getParam } from "./intro.js";
 
@@ -366,6 +366,69 @@ async function battleStart(pokemonTeam, foe, id) {
             await wait(2920);
             ACTION = false;
         }
+
+
+
+        else if (event.key == "v") { // - - - - - - - - - - - ESTIMATIONS - - - - - - - - - - - 
+            clear();
+            let estimations = ["Voici quelques estimations pour le tour à venir."];
+            estimations.push("      - - - ATTAQUE - - -");
+
+            let sensiFoe = calculSensibilité(pokemonTeam[0], foe);
+            let sensiPokemon = calculSensibilité(foe, pokemonTeam[0]);
+            let prcFoe = getPrecision(foe);
+            let prcPokemon = getPrecision(pokemonTeam[0]);
+            let essaisFoe = essaisGeometrique(prcFoe);
+            let essaisPokemon = essaisGeometrique(prcPokemon);
+            let pvFoe = Math.floor(((27*pokemonTeam[0].atk)/foe.def)*sensiFoe);
+            let pvPokemon = Math.floor(((27*foe.atk)/pokemonTeam[0].def)*sensiPokemon);
+            
+            let teamText = []
+            for (const pokemon of pokemonTeam) {
+                if (pokemon.nom != "VIDE") {
+                    let sensi = calculSensibilité(foe, pokemon);
+                    let pv = Math.floor(((27*foe.atk)/pokemon.def)*sensi);
+                    teamText.push("Si vous choisissez "+pokemon.nom+", il perdra "+pv+" PV")
+                }
+            }
+
+            let pvRatio = (foe.pvNow-1)/foe.pvMax;
+            let rate = binomiale(id, 4, 4)*(foe.taux/2)*(1-(pvRatio))*100
+            let essaisCapture = essaisGeometrique(rate/100);
+
+            console.log("battle Start → v - prcPokemon", prcPokemon)
+
+            estimations.push(pokemonTeam[0].nom+" est de type "+pokemonTeam[0].getTypeName()+".");
+            estimations.push("Le "+foe.nom+" adverse est de type "+foe.getTypeName()+".");
+            estimations.push("La puissance de vos attaques sera multipliée par "+sensiFoe+".");
+            estimations.push("La puissance des attaques de votre adversaire sera multipliée par "+sensiPokemon+".");
+            estimations.push(pokemonTeam[0].nom+" a une précision de "+pokemonTeam[0].prc+".");
+            estimations.push("Le "+foe.nom+" adverse a une précision de "+foe.prc+".");
+            estimations.push(pokemonTeam[0].nom+" a "+prcPokemon*100+"% de chances de toucher le "+foe.nom+" adverse.")
+            estimations.push("Il devrait y arriver à l'essai n°"+essaisPokemon);
+            estimations.push("Le "+foe.nom+" adverse perdra "+pvFoe+" PV");
+            estimations.push("Le "+foe.nom+" a "+prcFoe*100+"% de chances de toucher "+pokemonTeam[0].nom);
+            estimations.push("Il devrait y arriver a l'essai n°"+essaisFoe);
+            estimations.push(pokemonTeam[0].nom+" perdra "+pvPokemon+" PV");
+
+            estimations.push("      - - - POKEMON - - -");
+            estimations.push("Si vous choisissez d'échanger "+pokemonTeam[0].nom+" pour un autre pokémon de votre équipe,");
+            estimations.push("il sera attaqué par le "+foe.nom+" adverse avant le prochain tour.");
+            estimations.push(...teamText);
+
+            estimations.push("      - - - CAPTURE - - -");
+            estimations.push("Le "+foe.nom+" adverse a un taux de capture de "+foe.taux+".")
+            estimations.push("Vous avez "+rate+"% de chances de réussir à le capturer.");
+            estimations.push("Vous devriez y arriver a l'essai n°"+essaisCapture);
+
+            await updateText(estimations, 20);
+            await wait(40660);
+
+            clear();
+            await displayBattle(pokemonTeam[0], foe);
+        }
+
+
 
         if (!ACTION) {
             console.log("foe ko");
