@@ -2,8 +2,7 @@ import { updateTextInstant, clear, updateText, wait } from "./text.js";
 import {bernoulli, binomiale, essaisGeometrique, uniforme} from "./aleatoire.js";
 import hotkeys from "hotkeys-js";
 import { getParam } from "./intro.js";
-
-let isEventRegistered_R = false;
+import {GAME} from "./game.js";
 
 function removeHotkeys(handler) {
     for (const key in hotkeys._downKeys) {
@@ -119,16 +118,16 @@ async function battleChangePokemon(pokemonTeam) {
     let CHOIXOK = false;
     if (choix > 5) {
         CHOIXOK = false;
-    } else if (choix <= 5 && choix != 0 && pokemonTeam[choix].nom != "VIDE" && pokemonTeam[choix].pvNow > 0) {
+    } else if (choix <= 5 && pokemonTeam[choix].nom != "VIDE" && pokemonTeam[choix].pvNow > 0) {
         let res = pokemonTeam[0];
         pokemonTeam[0] = pokemonTeam[choix];
         pokemonTeam[choix] = res;
         CHOIXOK = true;
-    } else if (choix == 0 || pokemonTeam[choix].pvNow <= 0) {
+    } else if (pokemonTeam[choix].pvNow <= 0) {
         await updateText([pokemonTeam[choix].nom+" ne peut plus se battre !"], 20)
         await wait(2980);
         CHOIXOK = false;
-    }
+    } 
     if (!CHOIXOK) battleChangePokemon(pokemonTeam);
 }
 
@@ -289,12 +288,11 @@ async function battleStart(pokemonTeam, foe, id) {
                 
                 if (KO) {
                     ACTION = false;
-                    // ajouter genre on coupe le jeu
                 }
             }
 
             clear();
-            await displayBattle(pokemonTeam[0], foe);
+            if (ACTION) await displayBattle(pokemonTeam[0], foe);
         }
 
 
@@ -313,18 +311,17 @@ async function battleStart(pokemonTeam, foe, id) {
                 if (pokemonTeam[0].pvNow <= 0 && !KO) {
                     clear();
                     await updateText([pokemonTeam[0].nom + " est KO, quel Pokémon doit le remplacer ?"], 20)
-                    await wait(3220);
+                    await wait(5000);
                     await battleKOChangePokemon(pokemonTeam);
                 } 
                 
                 if (KO) {
                     ACTION = false;
-                    // ajouter genre on coupe le jeu
                 }
             }
 
             clear();
-            await displayBattle(pokemonTeam[0], foe);
+            if (ACTION) await displayBattle(pokemonTeam[0], foe);
 
         }
 
@@ -351,11 +348,10 @@ async function battleStart(pokemonTeam, foe, id) {
             
             if (KO) {
                 ACTION = false;
-                // ajouter genre on coupe le jeu
             }
 
             clear();
-            await displayBattle(pokemonTeam[0], foe);
+            if (ACTION) await displayBattle(pokemonTeam[0], foe);
         }
 
 
@@ -425,7 +421,7 @@ async function battleStart(pokemonTeam, foe, id) {
             await wait(40660);
 
             clear();
-            await displayBattle(pokemonTeam[0], foe);
+            if (ACTION) await displayBattle(pokemonTeam[0], foe);
         }
 
 

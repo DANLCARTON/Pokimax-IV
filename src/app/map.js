@@ -4,6 +4,7 @@ import { clear, convertMapToStringArray, updateText, wait, updateTextInstant } f
 import { getParam } from "./intro.js";
 import {battleChangePokemon, battleStart} from "./battle.js";
 import hotkeys from "hotkeys-js"
+import {GAME, verifDefaite, verifVictoire} from "./game.js";
 
 var player = "P";
 var pokemon = "░";
@@ -251,6 +252,18 @@ async function mapStart(id) {
             }
             map[coordY][coordX].content = player;
             await displayMap(map)
+            if (verifVictoire(map, haut, larg)) {
+                clear();
+                await updateText(["Vous avez rencontré tous les Pokémon de la région !", "Bravo !!"], 20);
+                await wait(2300);
+                GAME.value = false;
+            }
+            if (verifDefaite(playerTeam)) {
+                clear();
+                await updateText(["Vous n'avez plus de Pokémon en état de se battre dans votre équipe..."], 20);
+                await wait(2500);
+                GAME.value = false;
+            }
         }
     })
 
@@ -265,6 +278,18 @@ async function mapStart(id) {
             }
             map[coordY][coordX].content = player;
             await displayMap(map)
+            if (verifVictoire(map, haut, larg)) {
+                clear();
+                await updateText(["Vous avez rencontré tous les Pokémon de la région !", "Bravo !!"], 20);
+                await wait(2300);
+                GAME.value = false;
+            }
+            if (verifDefaite(playerTeam)) {
+                clear();
+                await updateText(["Vous n'avez plus de Pokémon en état de se battre dans votre équipe..."], 20);
+                await wait(2500);
+                GAME.value = false;
+            }
         }
     })
 
@@ -279,6 +304,18 @@ async function mapStart(id) {
             }
             map[coordY][coordX].content = player;
             await displayMap(map)
+            if (verifVictoire(map, haut, larg)) {
+                clear();
+                await updateText(["Vous avez rencontré tous les Pokémon de la région !", "Bravo !!"], 20);
+                await wait(2300);
+                GAME.value = false;
+            }
+            if (verifDefaite(playerTeam)) {
+                clear();
+                await updateText(["Vous n'avez plus de Pokémon en état de se battre dans votre équipe..."], 20);
+                await wait(2500);
+                GAME.value = false;
+            }
         }
     })
 
@@ -293,6 +330,18 @@ async function mapStart(id) {
             }
             map[coordY][coordX].content = player;
             await displayMap(map)
+            if (verifVictoire(map, haut, larg)) {
+                clear();
+                await updateText(["Vous avez rencontré tous les Pokémon de la région !", "Bravo !!"], 20);
+                await wait(2300);
+                GAME.value = false;
+            }
+            if (verifDefaite(playerTeam)) {
+                clear();
+                await updateText(["Vous n'avez plus de Pokémon en état de se battre dans votre équipe..."], 20);
+                await wait(2500);
+                GAME.value = false;
+            }
         }
     });
 
