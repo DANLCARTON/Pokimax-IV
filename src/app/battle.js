@@ -117,11 +117,25 @@ function battleChangePokemon(pokemonTeam) {
 
 }
 
-function battleCaptureChangePokemon(pokemonTeam, foe) {
-
+async function battleCaptureChangePokemon(pokemonTeam, foe) {
+    let alertText = alertTeamText(pokemonTeam);
+    alertText += "   6 • "+foe.nom;
+    console.log(alertText);
+    let choix = await getParam(alertText);
+    choix = parseInt(choix);
+    let CHOIXOK = false;
+    console.log("battle Capture Change Pokémon - pokemonTeam : ", pokemonTeam)
+    console.log("battle Capture Change Pokemon - choix : ", choix);
+    if (choix > 6) {
+        CHOIXOK = false;
+    } else if (choix <= 5) {
+        pokemonTeam[choix] = foe
+        CHOIXOK = true;
+    } else if (choix == 6) {
+        CHOIXOK = true;
+    }
+    if (!CHOIXOK) await battleCaptureChangePokemon(pokemonTeam, foe);
 }
-
-
 
 async function battleKOChangePokemon(pokemonTeam) {
     let alertText = alertTeamText(pokemonTeam);
@@ -181,8 +195,11 @@ async function battleCapture(pokemonTeam, foe, id) {
         let i = 1;
         while(!teamManaged) {
             if (i > 5) {
-                // battleCaptureChangePokemon;
-                ;
+                clear();
+                await updateText(["Votre équipe ne peux pas contenir plus de 6 Pokémon.", "Quel Pokémon voulez-vous libérer ?"], 40);
+                await wait(4600);
+                await battleCaptureChangePokemon(pokemonTeam, foe)
+                teamManaged = true;
             } else if (pokemonTeam[i].nom == "VIDE") {
                 pokemonTeam[i] = foe;
                 teamManaged = true;
@@ -236,6 +253,7 @@ async function battleStart(pokemonTeam, foe, id) {
             if (foe.pvNow <= 0) {
                 clear();
                 await updateText([foe.nom + " est KO !"], 20)
+                await wait(1420);
                 ACTION = false;
             }
 
