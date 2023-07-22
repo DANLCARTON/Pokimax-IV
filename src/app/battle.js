@@ -1,5 +1,5 @@
 import { updateTextInstant, clear, updateText, wait } from "./text.js";
-import {bernoulli} from "./aleatoire.js";
+import {bernoulli, binomiale, uniforme} from "./aleatoire.js";
 import hotkeys from "hotkeys-js";
 import { getParam } from "./intro.js";
 
@@ -126,10 +126,11 @@ function battleCaptureChangePokemon(pokemonTeam, foe) {
 async function battleKOChangePokemon(pokemonTeam) {
     let alertText = alertTeamText(pokemonTeam);
     console.log(alertText);
-    let choix = getParam(alertText);
+    let choix = await getParam(alertText);
     choix = parseInt(choix);
     let CHOIXOK = false;
     console.log("battle KO Change Pokémon - pokemonTeam : ", pokemonTeam)
+    console.log("battle KO Change Pokemon - choix : ", choix);
     if (choix > 5) {
         CHOIXOK = false;
     } else if (choix <= 5 && choix != 0 && pokemonTeam[choix].nom != "VIDE" && pokemonTeam[choix].pvNow > 0) {
@@ -145,8 +146,52 @@ async function battleKOChangePokemon(pokemonTeam) {
     if (!CHOIXOK) await battleKOChangePokemon(pokemonTeam);
 }
 
-function battleCapture(pokemonTeam, foe, id) {
+async function battleCapture(pokemonTeam, foe, id) {
+    let pvRatio = (foe.pvNow-1)/foe.pvMax;
+    let rate1 = binomiale(id, 1, 4)*(foe.taux/2)*(1-(pvRatio))*100;
+    let rate2 = binomiale(id, 2, 4)*(foe.taux/2)*(1-(pvRatio))*100;
+    let rate3 = binomiale(id, 3, 4)*(foe.taux/2)*(1-(pvRatio))*100;
+    let rate4 = binomiale(id, 4, 4)*(foe.taux/2)*(1-(pvRatio))*100;
+    let textToDisplay = ["", "", "", ""];
+    let lancer = uniforme()*100;
+    let success = false;
 
+    console.log("battle capture - rate1 : ", rate1);
+    console.log("battle capture - rate2 : ", rate2);
+    console.log("battle capture - rate3 : ", rate3);
+    console.log("battle capture - rate4 : ", rate4);
+    console.log("battle capture - lancer : ", lancer);
+
+    if (lancer <= rate1) textToDisplay[0] = "......";
+    if (lancer <= rate2) textToDisplay[1] = "........."
+    if (lancer <= rate3) textToDisplay[2] = "............"
+    if (lancer <= rate4) {
+        textToDisplay[3] = "Bravo ! "+foe.nom+" à été capturé !";
+        success = true;
+    } else {
+        textToDisplay[3] = "Aaaahh... "+foe.nom+" s'est libéré.";
+        success = false;
+    }
+    clear();
+    await updateText(textToDisplay, 40);
+    await wait(4600);
+
+    if (success) {
+        let teamManaged = false;
+        let i = 1;
+        while(!teamManaged) {
+            if (i > 5) {
+                // battleCaptureChangePokemon;
+                ;
+            } else if (pokemonTeam[i].nom == "VIDE") {
+                pokemonTeam[i] = foe;
+                teamManaged = true;
+            }
+            ++i;
+        }
+    }
+
+    return success;
 }
 
 async function alertRare(foe) {
@@ -216,6 +261,37 @@ async function battleStart(pokemonTeam, foe, id) {
 
             clear();
             await displayBattle(pokemonTeam[0], foe);
+        }
+
+
+
+        else if (event.key == "f") {
+            CAPTURE = await battleCapture(pokemonTeam, foe, id);
+            if (CAPTURE) {
+                ACTION = false;
+            } else {
+                pokemonTeam[0].pvNow = await battleAttaque(foe, pokemonTeam[0]);
+                
+                KO = verifKO(pokemonTeam);
+
+                console.log("battle Start → handleEvent - KO", KO)
+
+                if (pokemonTeam[0].pvNow <= 0 && !KO) {
+                    clear();
+                    await updateText([pokemonTeam[0].nom + " est KO, quel Pokémon doit le remplacer ?"], 20)
+                    await wait(3220);
+                    await battleKOChangePokemon(pokemonTeam);
+                } 
+                
+                if (KO) {
+                    ACTION = false;
+                    // ajouter genre on coupe le jeu
+                }
+            }
+
+            clear();
+            await displayBattle(pokemonTeam[0], foe);
+
         }
 
 
