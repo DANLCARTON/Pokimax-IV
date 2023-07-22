@@ -2,7 +2,7 @@ import { Pokemon } from "./pokemon.js";
 import { getPFromId, uniforme, poisson, hypergeometrique, densite } from "./aleatoire.js";
 import { clear, convertMapToStringArray, updateText, wait, updateTextInstant } from './text.js';
 import { getParam } from "./intro.js";
-import {battleStart} from "./battle.js";
+import {battleChangePokemon, battleStart} from "./battle.js";
 import hotkeys from "hotkeys-js"
 
 var player = "P";
@@ -294,7 +294,8 @@ async function mapStart(id) {
             map[coordY][coordX].content = player;
             await displayMap(map)
         }
-    })
-}   
+    });
+
+}
 
 export {mapStart}

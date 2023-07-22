@@ -87,14 +87,13 @@ async function battleAttaque(pokemon, foe) {
         else if (sensi == 0.5) efficacite = "Ce n'est pas très efficace...";
 
         await updateText(["",
-                          "",
                           pokemon.nom+" attaque !", 
                           efficacite, 
                           foe.nom+" perd "+degats+" PV !!"], 20);
         await wait(3860);
         foe.pvNow -= degats;
     } else {
-        updateText(["","",
+        updateText(["",
                     pokemon.nom+" attaque !",
                     foe.nom+" a esquivé l'attaque !!"], 20)
         await wait(2660);
@@ -181,7 +180,7 @@ async function battleCapture(pokemonTeam, foe, id) {
     let rate1 = binomiale(id, 1, 4)*(foe.taux/2)*(1-(pvRatio))*100;
     let rate2 = binomiale(id, 2, 4)*(foe.taux/2)*(1-(pvRatio))*100;
     let rate3 = binomiale(id, 3, 4)*(foe.taux/2)*(1-(pvRatio))*100;
-    let rate4 = binomiale(id, 4, 4)*(foe.taux/2)*(1-(pvRatio))*100;
+    let rate4 = binomiale(id, 4, 4)*(foe.taux/2)*(1-(pvRatio))*10000000000;
     let textToDisplay = ["", "", "", ""];
     let lancer = uniforme()*100;
     let success = false;
@@ -265,6 +264,7 @@ async function battleStart(pokemonTeam, foe, id) {
     async function handleEvent(event) {
         console.log("event.key", event.key)
         if (event.key == "r") { // - - - - - - - - - - - - ATTAQUE - - - - - - - - - - - -
+            clear();
             foe.pvNow = await battleAttaque(pokemonTeam[0], foe);
             if (foe.pvNow <= 0) {
                 clear();
