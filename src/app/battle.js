@@ -113,8 +113,24 @@ function alertTeamText(pokemonTeam) {
     return text
 }
 
-function battleChangePokemon(pokemonTeam) {
-
+async function battleChangePokemon(pokemonTeam) {
+    let alertText = alertTeamText(pokemonTeam);
+    let choix = await getParam(alertText);
+    choix = parseInt(choix);
+    let CHOIXOK = false;
+    if (choix > 5) {
+        CHOIXOK = false;
+    } else if (choix <= 5 && choix != 0 && pokemonTeam[choix].nom != "VIDE" && pokemonTeam[choix].pvNow > 0) {
+        let res = pokemonTeam[0];
+        pokemonTeam[0] = pokemonTeam[choix];
+        pokemonTeam[choix] = res;
+        CHOIXOK = true;
+    } else if (choix == 0 || pokemonTeam[choix].pvNow <= 0) {
+        await updateText([pokemonTeam[choix].nom+" ne peut plus se battre !"], 20)
+        await wait(2980);
+        CHOIXOK = false;
+    }
+    if (!CHOIXOK) battleChangePokemon(pokemonTeam);
 }
 
 async function battleCaptureChangePokemon(pokemonTeam, foe) {
@@ -248,7 +264,7 @@ async function battleStart(pokemonTeam, foe, id) {
 
     async function handleEvent(event) {
         console.log("event.key", event.key)
-        if (event.key == "r") {
+        if (event.key == "r") { // - - - - - - - - - - - - ATTAQUE - - - - - - - - - - - -
             foe.pvNow = await battleAttaque(pokemonTeam[0], foe);
             if (foe.pvNow <= 0) {
                 clear();
@@ -283,7 +299,7 @@ async function battleStart(pokemonTeam, foe, id) {
 
 
 
-        else if (event.key == "f") {
+        else if (event.key == "f") {// - - - - - - - - - - - - CAPTURE - - - - - - - - - - - -
             CAPTURE = await battleCapture(pokemonTeam, foe, id);
             if (CAPTURE) {
                 ACTION = false;
@@ -314,7 +330,37 @@ async function battleStart(pokemonTeam, foe, id) {
 
 
 
-        else if (event.key == "g") {
+        else if (event.key == "t") {// - - - - - - - - - - - - ÉQUIPE - - - - - - - - - - - -
+            clear();
+            await updateText(["Quel Pokémon doit remplacer "+pokemonTeam[0].nom+" ?"], 40)
+            await wait(4080);
+            await battleChangePokemon(pokemonTeam);
+
+            pokemonTeam[0].pvNow = await battleAttaque(foe, pokemonTeam[0]);
+                
+            KO = verifKO(pokemonTeam);
+
+            console.log("battle Start → handleEvent - KO", KO)
+
+            if (pokemonTeam[0].pvNow <= 0 && !KO) {
+                clear();
+                await updateText([pokemonTeam[0].nom + " est KO, quel Pokémon doit le remplacer ?"], 20)
+                await wait(3220);
+                await battleKOChangePokemon(pokemonTeam);
+            } 
+            
+            if (KO) {
+                ACTION = false;
+                // ajouter genre on coupe le jeu
+            }
+
+            clear();
+            await displayBattle(pokemonTeam[0], foe);
+        }
+
+
+
+        else if (event.key == "g") {// - - - - - - - - - - - - FUITE - - - - - - - - - - - -
             clear();
             await updateText(["Vous prenez la fuite !"], 40);
             await wait(2920);
@@ -343,4 +389,4 @@ async function battleStart(pokemonTeam, foe, id) {
     });
 }
 
-export {battleStart}
+export {battleStart, battleChangePokemon}
