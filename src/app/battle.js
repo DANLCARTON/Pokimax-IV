@@ -3,6 +3,8 @@ import {bernoulli} from "./aleatoire.js";
 import hotkeys from "hotkeys-js";
 import { getParam } from "./intro.js";
 
+let isEventRegistered_R = false;
+
 function removeHotkeys(handler) {
     for (const key in hotkeys._downKeys) {
         const handlers = hotkeys._downKeys[key];
@@ -201,47 +203,55 @@ async function battleStart(pokemonTeam, foe, id) {
     let CAPTURE = false;
     let NOKO = true;
 
-    // Définir la fonction de gestion des événements
-    async function handleAttack(event, handler) {
-        foe.pvNow = await battleAttaque(pokemonTeam[0], foe);
-        if (foe.pvNow <= 0) {
-            clear();
-            await updateText([foe.nom + " est KO !"], 20)
-            ACTION = false;
-        }
+    async function handleEvent(event) {
+        
+        console.log("is event registered r", isEventRegistered_R)
+        //if (!isEventRegistered_R) {
+            console.log("event.key", event.key)
+            if (event.key == "r") {
+                console.log("r pressed")
+                foe.pvNow = await battleAttaque(pokemonTeam[0], foe);
+                if (foe.pvNow <= 0) {
+                    clear();
+                    await updateText([foe.nom + " est KO !"], 20)
+                    ACTION = false;
+                }
 
-        if (ACTION) {
-            pokemonTeam[0].pvNow = await battleAttaque(foe, pokemonTeam[0]);
-            if (pokemonTeam[0].pvNow <= 0) {
-                for (const pokemon of pokemonTeam) {
-                    if (pokemon.pvNow > 0) {
-                        NOKO = false;
-                        break;
+                if (ACTION) {
+                    pokemonTeam[0].pvNow = await battleAttaque(foe, pokemonTeam[0]);
+                    if (pokemonTeam[0].pvNow <= 0) {
+                        for (const pokemon of pokemonTeam) {
+                            if (pokemon.pvNow > 0) {
+                                NOKO = false;
+                                break;
+                            }
+                        }
+
+                        if (NOKO) {
+                            clear();
+                            await updateText([pokemonTeam[0].nom + " est KO, quel Pokémon doit le remplacer ?"], 20)
+                            await wait(3220);
+                            await battleKOChangePokemon(pokemonTeam);
+                        } else {
+                            ACTION = false;
+                        }
+                    } else {
+                        clear();
+                        await displayBattle(pokemonTeam[0], foe);
                     }
                 }
 
-                if (NOKO) {
-                    clear();
-                    await updateText([pokemonTeam[0].nom + " est KO, quel Pokémon doit le remplacer ?"], 20)
-                    await wait(3220);
-                    await battleKOChangePokemon(pokemonTeam);
-                } else {
-                    ACTION = false;
+                if (!ACTION) {
+                    console.log("foe ko");
                 }
-            } else {
-                clear();
-                await displayBattle(pokemonTeam[0], foe);
-            }
-        }
-
-        if (!ACTION) {
-            console.log("foe ko");
-            removeHotkeys(handleAttack); // Supprimer le gestionnaire d'événements après le combat
+                //isEventRegistered_R = true;
+            //}
         }
     }
 
-    // Enregistrer le gestionnaire d'événements
-    hotkeys("r", handleAttack);
+    window.addEventListener("keypress", handleEvent)
+
+    console.log("ACTION = ", ACTION)
 
     // Attendre la fin du combat
     await new Promise((resolve) => {
@@ -249,6 +259,7 @@ async function battleStart(pokemonTeam, foe, id) {
         const interval = setInterval(() => {
             if (!ACTION) {
                 clearInterval(interval);
+                window.removeEventListener("keypress", handleEvent)
                 resolve(); // Résoudre la promesse lorsque le Pokémon adverse est KO
             }
         }, 100);
