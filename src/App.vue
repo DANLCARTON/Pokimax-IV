@@ -1,15 +1,11 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-import GameArea from './components/GameArea.vue'
+import FooterFooter from "./components/FooterFooter.vue"
 </script>
 
 <template>
-
-<div id="gamearea">
-<GameArea />
-</div>
-
+  <RouterView />
+  <FooterFooter />
 </template>
 
 <style scoped>
@@ -49,12 +45,8 @@ nav a:first-of-type {
 }
 
 #app {
-    padding: 10px;
-    border-radius: 10px;
-    background: linear-gradient(135deg, #353535, #252525);
-    line-height: 18px;
+  
 }
-
 
 @media (min-width: 1024px) {
   header {
