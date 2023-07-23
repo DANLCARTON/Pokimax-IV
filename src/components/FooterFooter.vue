@@ -13,7 +13,7 @@ footer {
     position: fixed;
     bottom: 0;
     left: 0;
-    width: 100vw;
+    right: 0;
     background: #353535;
     display: flex;
     justify-content: space-between;
