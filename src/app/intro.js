@@ -17,7 +17,7 @@ function getID(name) {
 }
 
 async function intro() {
-    const speed = -4000;
+    const speed = -6000;
     await wait(0+speed);
     clear();
     await updateText(["...", "..."], 80);
@@ -82,8 +82,8 @@ async function intro() {
     await updateText(["Ah ! J'ai failli oublier !!"], 20);
     await wait(520+speed);
     clear();
-    await updateText(["Déplace-toi avec les touches", "Z, Q, S et D. Appuie sur la touche T", "Pour gérer ton équipe.", "Pour les actions en combat, utilise", "les touches R, T, F, G et V"], 40),
-    await wait(6120+speed);
+    await updateText(["Déplace-toi avec les touches", "Z, Q, S et D.", "Pour les actions en combat, utilise", "les touches R, T, F, G et V"], 40),
+    await wait(4640+speed);
     clear();
     await updateText(["..."], 80);
     await wait(240+speed);

@@ -68,4 +68,27 @@ function bernoulli(p) {
     return val < p ? true : false;
 }
 
-export {uniforme, getPFromId, poisson, hypergeometrique, densite, bernoulli};
+function factorielle(n) {
+    let res = 1;
+    for (let i = 2; i <= n; ++i) res *= i;
+    return res;
+}
+
+function binomiale(id, k, n) {
+    let p = getPFromId(id);
+    let Cnk = factorielle(n)/(factorielle(k)*factorielle(n-k));
+    let Pk = Cnk*Math.pow(p, k)*Math.pow(1-p, n-k);
+    return Pk;
+}
+
+function essaisGeometrique(p) {
+    let k = 1;
+    let Px = Math.pow(1-p, k-1)*p;
+    while(Px < 0.95) {
+        ++k;
+        Px += Math.pow(1-p, k-1)*p
+    } 
+    return k;
+}
+
+export {uniforme, getPFromId, poisson, hypergeometrique, densite, bernoulli, binomiale, essaisGeometrique};

@@ -2,8 +2,9 @@ import { Pokemon } from "./pokemon.js";
 import { getPFromId, uniforme, poisson, hypergeometrique, densite } from "./aleatoire.js";
 import { clear, convertMapToStringArray, updateText, wait, updateTextInstant } from './text.js';
 import { getParam } from "./intro.js";
-import {battleStart} from "./battle.js";
+import {battleChangePokemon, battleStart} from "./battle.js";
 import hotkeys from "hotkeys-js"
+import {GAME, verifDefaite, verifVictoire} from "./game.js";
 
 var player = "P";
 var pokemon = "░";
@@ -219,6 +220,7 @@ async function mapStart(id) {
     let Vide = new Pokemon("VIDE", "N", 0, 0, 0, 0, 0, 0, 0);
 
     let pokemonList = [Pikachu, Canarticho, Kangourex, Scarabrute, Tauros, Lokhlass, Insolourdo, Qwilfish, Caratroc, Scarinho, Corayon, Cadoizo, Airmure, Queulorior, Ecremeuh, Tenefix, Mysdibule, Posipi, Negapi, Muciole, Lumivole, Chartor, Spinda, Mangriff, Seviper, Seleroc, Solaroc, Morpheo, Kecleon, Tropius, Absol, Relicanth, Lovdisc, Pachirisu, Pijako, Spiritomb, Vortente, Motisma, Nanmeouie, Judokrak, Karaclee, Bargantua, Maracachi, Cryptero, Emolga, Mamanbo, Hexagel, Limonde, Drakkarmin, Frison, Aflamanoir, Fermite, Couafarel, Brutalibre, Dedenne, Strassie, Trousselin, Brocelome, Plumeline, Froussardine, Guerilande, Gouroutan, Quartermac, Concombaffe, Meteno, Dodoala, Boumata, Togedemaru, Mimiqui, Denticrisse, Draieul, Sinistrail, Katagami, Nigosier, Hexadron, Wimessir, Duralugon, Wattapik, Dolman, Bekaglacon, Morpeko, Tapatoes, Craparoi, Lestombaile, Ferdeter, Flamenroule, Delestin, Oyacata, Nigirigon, Motorizard, Chongjian, Baojian, Dinglu, Yuyu, RugitLune, GardeDeFer];
+    //let pokemonList = [Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne, Dedenne];
 
     const haut = await getParam("Hauteur de la map ? (conseillée : 25)");
     const larg = await getParam("Largeur de la map ? (conseillée : 50)");
@@ -250,6 +252,18 @@ async function mapStart(id) {
             }
             map[coordY][coordX].content = player;
             await displayMap(map)
+            if (verifVictoire(map, haut, larg)) {
+                clear();
+                await updateText(["Vous avez rencontré tous les Pokémon de la région !", "Bravo !!"], 20);
+                await wait(2300);
+                GAME.value = false;
+            }
+            if (verifDefaite(playerTeam)) {
+                clear();
+                await updateText(["Vous n'avez plus de Pokémon en état de se battre dans votre équipe..."], 20);
+                await wait(2500);
+                GAME.value = false;
+            }
         }
     })
 
@@ -264,6 +278,18 @@ async function mapStart(id) {
             }
             map[coordY][coordX].content = player;
             await displayMap(map)
+            if (verifVictoire(map, haut, larg)) {
+                clear();
+                await updateText(["Vous avez rencontré tous les Pokémon de la région !", "Bravo !!"], 20);
+                await wait(2300);
+                GAME.value = false;
+            }
+            if (verifDefaite(playerTeam)) {
+                clear();
+                await updateText(["Vous n'avez plus de Pokémon en état de se battre dans votre équipe..."], 20);
+                await wait(2500);
+                GAME.value = false;
+            }
         }
     })
 
@@ -278,6 +304,18 @@ async function mapStart(id) {
             }
             map[coordY][coordX].content = player;
             await displayMap(map)
+            if (verifVictoire(map, haut, larg)) {
+                clear();
+                await updateText(["Vous avez rencontré tous les Pokémon de la région !", "Bravo !!"], 20);
+                await wait(2300);
+                GAME.value = false;
+            }
+            if (verifDefaite(playerTeam)) {
+                clear();
+                await updateText(["Vous n'avez plus de Pokémon en état de se battre dans votre équipe..."], 20);
+                await wait(2500);
+                GAME.value = false;
+            }
         }
     })
 
@@ -292,8 +330,21 @@ async function mapStart(id) {
             }
             map[coordY][coordX].content = player;
             await displayMap(map)
+            if (verifVictoire(map, haut, larg)) {
+                clear();
+                await updateText(["Vous avez rencontré tous les Pokémon de la région !", "Bravo !!"], 20);
+                await wait(2300);
+                GAME.value = false;
+            }
+            if (verifDefaite(playerTeam)) {
+                clear();
+                await updateText(["Vous n'avez plus de Pokémon en état de se battre dans votre équipe..."], 20);
+                await wait(2500);
+                GAME.value = false;
+            }
         }
-    })
-}   
+    });
+
+}
 
 export {mapStart}
