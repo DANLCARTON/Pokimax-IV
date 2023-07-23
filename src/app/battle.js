@@ -179,7 +179,7 @@ async function battleCapture(pokemonTeam, foe, id) {
     let rate1 = binomiale(id, 1, 4)*(foe.taux/2)*(1-(pvRatio))*100;
     let rate2 = binomiale(id, 2, 4)*(foe.taux/2)*(1-(pvRatio))*100;
     let rate3 = binomiale(id, 3, 4)*(foe.taux/2)*(1-(pvRatio))*100;
-    let rate4 = binomiale(id, 4, 4)*(foe.taux/2)*(1-(pvRatio))*10000000000;
+    let rate4 = binomiale(id, 4, 4)*(foe.taux/2)*(1-(pvRatio))*100;
     let textToDisplay = ["", "", "", ""];
     let lancer = uniforme()*100;
     let success = false;
